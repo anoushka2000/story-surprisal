@@ -70,7 +70,7 @@ def sentencewise_cosine_similarity(embeddings: torch.Tensor):
 if __name__=="__main__":
 
     # Load model and tokenizer
-    model, tokenizer = load_model()
+    model, tokenizer = load_model(model_name="sentence-transformers/all-mpnet-base-v2", causal=False)
 
     # Load data and tokenize
     with open("data/story.txt", encoding="utf-8") as f:

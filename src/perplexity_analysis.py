@@ -67,7 +67,7 @@ def compute_perplexity(model: Module, tokenizer: AutoTokenizer, sentences: List[
 if __name__=="__main__":
 
     # Load model and tokenizer
-    model, tokenizer = load_model(model_name="gpt2", causal=True)
+    model, tokenizer = load_model(model_name="sentence-transformers/all-mpnet-base-v2", causal=True)
 
     # Load data and tokenize
     with open("data/story.txt", encoding="utf-8") as f:
