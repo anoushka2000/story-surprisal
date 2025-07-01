@@ -67,14 +67,16 @@ def compute_perplexity(model: Module, tokenizer: AutoTokenizer, sentences: List[
 if __name__=="__main__":
 
     # Load model and tokenizer
-    model, tokenizer = load_model(model_name="sentence-transformers/all-mpnet-base-v2", causal=True)
+    model, tokenizer = load_model(model_name="sentence-transformers/all-mpnet-base-v2", causal=False)
+    pmodel, ptokenizer = load_model(model_name="gpt2", causal=True)
+
 
     # Load data and tokenize
     with open("data/story.txt", encoding="utf-8") as f:
         text = f.read()
     sentences: List[str] = sent_tokenize(text)
 
-    perplexities = compute_perplexity(model,tokenizer, sentences)
+    perplexities = compute_perplexity(pmodel, ptokenizer, sentences)
     threshold = np.percentile(perplexities, 90)
 
     # Top 10% perplexities

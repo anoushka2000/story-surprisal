@@ -32,7 +32,7 @@ def embed_sentence(sentence: str, tokenizer: AutoTokenizer, model: Module) -> to
     return sentence_embedding.squeeze()                     # [H]
 
 
-def compute_embeddings(sentences: List[str], batch_size: int = 8):
+def compute_embeddings(tokenizer: AutoTokenizer, model: Module, sentences: List[str], batch_size: int = 8):
 
     embeds = []
     for i in range(0, len(sentences), batch_size):
@@ -67,32 +67,33 @@ def sentencewise_cosine_similarity(embeddings: torch.Tensor):
 
 
 
-if __name__=="__main__":
+# if __name__=="__main__":
 
-    # Load model and tokenizer
-    model, tokenizer = load_model(model_name="sentence-transformers/all-mpnet-base-v2", causal=False)
-
-    # Load data and tokenize
-    with open("data/story.txt", encoding="utf-8") as f:
-        text = f.read()
-    sentences: List[str] = sent_tokenize(text) 
-
-    embeddings = compute_embeddings(sentences)
-    sims = sentencewise_cosine_similarity(embeddings)
-
-    # Flag low-similarity points (semantic "jumps")
-    # Use 10th-percentile as a heuristic cut-off.
-    threshold = np.percentile(sims, 10)
-
-    print(f"\n=== Potential narrative turning points (similarity < {threshold:.3f}) ===")
-    for idx, sim in enumerate(sims, start=1):   # idx == sentence index
-        if sim < threshold:
-            print(f"[{idx:>4}] sim={sim:.3f} → {sentences[idx][:]}")
+#     # Load model and tokenizer
+#     model, tokenizer = load_model(model_name="sentence-transformers/all-mpnet-base-v2", causal=False)
 
 
-    plt.plot(range(1, len(sims)+1), sims)
-    plt.axhline(threshold, ls="--")
-    plt.xlabel("Sentence index")
-    plt.ylabel("Cosine similarity to prev.")
-    plt.title("Semantic continuity curve")
-    plt.savefig("semantic_continuity_curve.png")
+#     # Load data and tokenize
+#     with open("data/story.txt", encoding="utf-8") as f:
+#         text = f.read()
+#     sentences: List[str] = sent_tokenize(text) 
+
+#     embeddings = compute_embeddings(sentences)
+#     sims = sentencewise_cosine_similarity(embeddings)
+
+#     # Flag low-similarity points (semantic "jumps")
+#     # Use 10th-percentile as a heuristic cut-off.
+#     threshold = np.percentile(sims, 10)
+
+#     print(f"\n=== Potential narrative turning points (similarity < {threshold:.3f}) ===")
+#     for idx, sim in enumerate(sims, start=1):   # idx == sentence index
+#         if sim < threshold:
+#             print(f"[{idx:>4}] sim={sim:.3f} → {sentences[idx][:]}")
+
+
+#     plt.plot(range(1, len(sims)+1), sims)
+#     plt.axhline(threshold, ls="--")
+#     plt.xlabel("Sentence index")
+#     plt.ylabel("Cosine similarity to prev.")
+#     plt.title("Semantic continuity curve")
+#     plt.savefig("semantic_continuity_curve.png")
